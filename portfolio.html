@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Интерактивное портфолио-презентация</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    .form-container, .presentation-container {
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .form-container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #6e8efb;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+    }
+
+    .form-group button {
+      background: linear-gradient(to right, #6e8efb, #a777e3);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .slide {
+      background: #fff;
+      margin-top: 30px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .slide h2 {
+      color: #6e8efb;
+      margin-bottom: 20px;
+    }
+
+    .skills-list, .projects-list, .certificates-list, .contact-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .skills-list li, .projects-list li, .certificates-list li, .contact-list li {
+      margin-bottom: 10px;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .generated {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>Введите данные для портфолио</h2>
+  <div class="form-group">
+    <label>Имя</label>
+    <input type="text" id="name" />
+  </div>
+  <div class="form-group">
+    <label>Профессия</label>
+    <input type="text" id="profession" />
+  </div>
+  <div class="form-group">
+    <label>О себе</label>
+    <textarea id="about" rows="5"></textarea>
+  </div>
+  <div class="form-group">
+    <label>Навыки (через запятую)</label>
+    <input type="text" id="skills" />
+  </div>
+  <div class="form-group">
+    <label>Проекты (по одному на строку)</label>
+    <textarea id="projects" rows="4"></textarea>
+  </div>
+  <div class="form-group">
+    <label>Сертификаты (по одному на строку)</label>
+    <textarea id="certificates" rows="4"></textarea>
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" id="email" />
+  </div>
+  <div class="form-group">
+    <label>Телефон</label>
+    <input type="text" id="phone" />
+  </div>
+  <div class="form-group">
+    <label>Соцсети</label>
+    <input type="text" id="social" />
+  </div>
+  <div class="form-group">
+    <button onclick="generatePresentation()">Сгенерировать презентацию</button>
+  </div>
+</div>
+
+<div class="presentation-container" id="presentation"></div>
+
+<script>
+  function generatePresentation() {
+    const name = document.getElementById('name').value;
+    const profession = document.getElementById('profession').value;
+    const about = document.getElementById('about').value;
+    const skills = document.getElementById('skills').value.split(',').map(s => s.trim());
+    const projects = document.getElementById('projects').value.split('\n').filter(Boolean);
+    const certificates = document.getElementById('certificates').value.split('\n').filter(Boolean);
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const social = document.getElementById('social').value;
+
+    const presentation = document.getElementById('presentation');
+    presentation.innerHTML = '';
+
+    // Slide 1 - Welcome
+    const slide1 = document.createElement('div');
+    slide1.className = 'slide';
+    slide1.innerHTML = `
+      <h2>Приветствие</h2>
+      <div class="profile-photo">Фото</div>
+      <div class="generated">
+        Привет! Меня зовут <strong>${name}</strong>. Я <strong>${profession}</strong>, стремящийся к профессиональному росту и реализации креативных идей в своей сфере. В этом портфолио я хочу показать вам мои лучшие проекты и навыки. Добро пожаловать!
+      </div>
+    `;
+    presentation.appendChild(slide1);
+
+    // Slide 2 - About
+    const slide2 = document.createElement('div');
+    slide2.className = 'slide';
+    slide2.innerHTML = `
+      <h2>Обо мне</h2>
+      <div class="generated">${about}</div>
+      <h3>Навыки</h3>
+      <ul class="skills-list">
+        ${skills.map(skill => `<li>${skill}</li>`).join('')}
+      </ul>
+    `;
+    presentation.appendChild(slide2);
+
+    // Slide 3 - Projects
+    const slide3 = document.createElement('div');
+    slide3.className = 'slide';
+    slide3.innerHTML = `<h2>Проекты</h2>`;
+    const projectsList = document.createElement('ul');
+    projectsList.className = 'projects-list';
+    projects.forEach(proj => {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${proj}</strong>: Этот проект продемонстрировал мои навыки и подход к решению задач.`;
+      projectsList.appendChild(li);
+    });
+    slide3.appendChild(projectsList);
+    presentation.appendChild(slide3);
+
+    // Slide 4 - Certificates
+    const slide4 = document.createElement('div');
+    slide4.className = 'slide';
+    slide4.innerHTML = `<h2>Сертификаты и дипломы</h2>`;
+    const certList = document.createElement('ul');
+    certList.className = 'certificates-list';
+    certificates.forEach(cert => {
+      const li = document.createElement('li');
+      li.innerHTML = `<div><strong>${cert}</strong><br/>[Место для фото]</div>`;
+      certList.appendChild(li);
+    });
+    slide4.appendChild(certList);
+    presentation.appendChild(slide4);
+
+    // Slide 5 - Contacts
+    const slide5 = document.createElement('div');
+    slide5.className = 'slide';
+    slide5.innerHTML = `
+      <h2>Контакты</h2>
+      <ul class="contact-list">
+        <li><strong>Email:</strong> ${email}</li>
+        <li><strong>Телефон:</strong> ${phone}</li>
+        <li><strong>Соцсети:</strong> ${social}</li>
+      </ul>
+    `;
+    presentation.appendChild(slide5);
+
+    window.scrollTo({ top: presentation.offsetTop, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
